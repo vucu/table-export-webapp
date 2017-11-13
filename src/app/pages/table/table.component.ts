@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
 import { OnInit } from '@angular/core';
+import { Angular2Csv } from 'angular2-csv/Angular2-csv';
 
 @Component({
   selector: 'table-component',
@@ -26,6 +27,10 @@ export class TableComponent implements OnInit {
       }
       this.table.push(a);
     }
+  }
+
+  exportToCsv(event) {
+    new Angular2Csv(this.table,"Output");
   }
 
 }

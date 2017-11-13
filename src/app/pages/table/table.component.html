@@ -1,5 +1,7 @@
 <div align="center">
   <h2>table</h2>
+  <button (click)="exportToCsv($event)">Export to CSV</button>
+  <br><br>
   <table border="1">
     <tr>
       <th *ngFor="let header of tableHeader">{{header}}</th>
