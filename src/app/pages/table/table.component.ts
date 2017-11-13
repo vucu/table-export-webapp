@@ -6,16 +6,23 @@ import { OnInit } from '@angular/core';
   templateUrl: './table.component.html'
 })
 export class TableComponent implements OnInit {
-  table:number[][]
   cols = 5;
   rows = 20;
+  tableHeader:string[] = [];
+  table:string[][] = [];
 
   ngOnInit() {
-    let i,j:number;
+    var i,j:number;
     for (i=0;i<this.cols;i++) {
-      let a:number[];
-      for (j=0;j<this.rows;j++) {
-        a.push(Math.random()*100);
+      var s:string;
+      s = "Column " + (i+1);
+      this.tableHeader.push(s);
+    }
+
+    for (i=0;i<this.rows;i++) {
+      var a:string[] = [];
+      for (j=0;j<this.cols;j++) {
+        a.push((Math.random()*100).toFixed(2));
       }
       this.table.push(a);
     }

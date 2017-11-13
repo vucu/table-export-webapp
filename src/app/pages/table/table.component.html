@@ -2,19 +2,10 @@
   <h2>table</h2>
   <table border="1">
     <tr>
-      <th>Firstname</th>
-      <th>Lastname</th>
-      <th>Age</th>
+      <th *ngFor="let header of tableHeader">{{header}}</th>
     </tr>
-    <tr>
-      <td>Jill</td>
-      <td>Smith</td>
-      <td>50</td>
-    </tr>
-    <tr>
-      <td>Eve</td>
-      <td>Jackson</td>
-      <td>94</td>
+    <tr *ngFor="let numberArray of table">
+      <td *ngFor="let number of numberArray">{{number}}</td>
     </tr>
   </table>
 </div>
