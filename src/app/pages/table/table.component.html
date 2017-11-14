@@ -17,13 +17,13 @@
   <p>Thêm mục mới: <input [(ngModel)]="newFieldData"> <button (click)="createField()">Thêm</button></p>
 
   <h2>Thêm khách hàng mới</h2>
-  <p *ngFor="let field of fields">
-    {{field}}&nbsp;:&nbsp;<input type="text" value="">
+  <p *ngFor="let field of fields; let i = index">
+    {{field}}&nbsp;:&nbsp;<input [(ngModel)]="newCustomerData[i]">
   </p>
   <p>
-    <button>Thêm</button>
+    <button (click)="createNewCustomer()">Thêm</button>
     &nbsp;
- <button>Nhập lại</button>
+    <button (click)="resetNewCustomerInput()">Nhập lại</button>
   </p>
 
   <h2>Danh sách khách hàng</h2>
@@ -43,4 +43,6 @@
       </td>
     </tr>
   </table>
+
+  <br>
 </div>

@@ -58,7 +58,17 @@ export class TableComponent implements OnInit {
     this.fields.splice(index,1);
   }
 
-  createCustomer() {
+  createNewCustomer() {
+    var id;
+    id = this.customerData.createCustomer();
+    for (var i=0;i<this.fields.length;i++) {
+      let fieldName:string = this.fields[i];
+      let fieldValue:string = this.newCustomerData[i];
+      this.customerData.updateField(id,fieldName,fieldValue);
+    }
+  }
 
+  resetNewCustomerInput() {
+    this.newCustomerData = [];
   }
 }
