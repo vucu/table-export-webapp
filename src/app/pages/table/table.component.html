@@ -1,21 +1,53 @@
 <div align="center">
   <h1>Quản lý danh mục khách hàng</h1>
   <h2>Mục</h2>
+  <table border="1">
+    <tr>
+      <th>Mục</th>
+      <th style="padding-right: 5px"> </th>
+    </tr>
+    <tr *ngFor="let field of fields">
+      <td>{{field}}</td>
+      <td style="padding-right: 5px">
+        <button>Xóa</button>
+      </td>
+    </tr>
+    <tr>
+      <td><input type="text" value=""></td>
+      <td style="padding-right: 5px">
+        <button (click)="createField($event)">Thêm</button>
+      </td>
+    </tr>
+  </table>
+
   <h2>Thêm khách hàng mới</h2>
+  <p *ngFor="let field of fields">
+    {{field}}&nbsp;:&nbsp;<input type="text" value="">
+  </p>
+  <p>
+    <button>Thêm</button>
+    &nbsp;
+    <button>Nhập lại</button>
+  </p>
+
   <h2>Danh sách khách hàng</h2>
   <p>{{customerData.getCustomerList()}}</p>
   <p>{{fields}}</p>
   <p>{{customerData.getField(0,fields[0])}}</p>
-  <p>{{customerData.toString()}}</p>
   <button (click)="exportToCsv($event)">Export to CSV</button>
   <br><br>
-  <table border="1" style="padding: 10px;">
+  <table border="1">
     <tr>
       <th *ngFor="let field of fields">{{field}}</th>
+      <th style="padding-right: 5px"> </th>
     </tr>
     <tr *ngFor="let customerId of customerData.getCustomerList()">
       <td *ngFor="let field of fields">{{customerData.getField(customerId,field)}}</td>
-      <td><button>Xóa</button></td>
+      <td style="padding-right: 5px">
+        <button>Sửa</button>
+        &nbsp;
+        <button>Xóa</button>
+      </td>
     </tr>
   </table>
 </div>

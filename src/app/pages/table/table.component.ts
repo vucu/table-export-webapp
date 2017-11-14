@@ -5,7 +5,8 @@ import {CustomerData} from "../../models/CustomerData";
 
 @Component({
   selector: 'table-component',
-  templateUrl: './table.component.html'
+  templateUrl: './table.component.html',
+  styleUrls: ['./table.component.css']
 })
 export class TableComponent implements OnInit {
   customerData:CustomerData;
@@ -41,4 +42,11 @@ export class TableComponent implements OnInit {
 
   }
 
+  createField(event) {
+
+  }
+
+  createCustomer(event) {
+
+  }
 }
