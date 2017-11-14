@@ -71,4 +71,8 @@ export class TableComponent implements OnInit {
   resetNewCustomerInput() {
     this.newCustomerData = [];
   }
+
+  deleteCustomer(customterId:number) {
+    this.customerData.deleteCustomer(customterId);
+  }
 }
