@@ -12,7 +12,7 @@ export class TableComponent implements OnInit {
   customerData:CustomerData;
   fields:string[] = [];
 
-  newFieldData:string;
+  newFieldData:string = "";
   newCustomerData:string[] = [];
 
   loadSampleData() {
@@ -46,6 +46,10 @@ export class TableComponent implements OnInit {
   }
 
   createField() {
+
+  }
+
+  deleteField(index:number) {
 
   }
 

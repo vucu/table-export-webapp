@@ -12,13 +12,9 @@
         <button>Xóa</button>
       </td>
     </tr>
-    <tr>
-      <td><input ngModel="newFieldData"></td>
-      <td style="padding-right: 5px">
-        <button (click)="createField()">Thêm</button>
-      </td>
-    </tr>
   </table>
+  <br>
+  <p>Thêm mục mới: <input> <button (click)="createField()">Thêm</button></p>
 
   <h2>Thêm khách hàng mới</h2>
   <p *ngFor="let field of fields">
@@ -27,7 +23,7 @@
   <p>
     <button>Thêm</button>
     &nbsp;
-    <button>Nhập lại</button>
+ <button>Nhập lại</button>
   </p>
 
   <h2>Danh sách khách hàng</h2>
