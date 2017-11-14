@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
 import { OnInit } from '@angular/core';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { Angular2Csv } from 'angular2-csv/Angular2-csv';
 import {CustomerData} from "../../models/CustomerData";
 
