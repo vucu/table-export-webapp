@@ -54,4 +54,14 @@ export class CustomerData {
     key = [customerId,fieldName];
     this.data.set(key,fieldValue);
   }
+
+  // For debug
+  toString():string {
+    var s:string = "";
+    s += "Customer Data: "
+    this.data.forEach(function(value, key) {
+      s = s + "([" + key[0] + "," + key[1] + "]," + value + "), ";
+    });
+    return s;
+  }
 }
