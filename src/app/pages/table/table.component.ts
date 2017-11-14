@@ -69,6 +69,7 @@ export class TableComponent implements OnInit {
       let fieldValue:string = this.newCustomerData[i];
       this.customerData.updateField(id,fieldName,fieldValue);
     }
+    this.newCustomerData = [];
   }
 
   resetNewCustomerInput() {
