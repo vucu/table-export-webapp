@@ -4,7 +4,7 @@
   <table border="1">
     <tr>
       <th>Mục</th>
-      <th style="padding-right: 5px"> </th>
+      <th style="padding-right: 5px"></th>
     </tr>
     <tr *ngFor="let field of fields; let i = index">
       <td>{{field}}</td>
@@ -14,7 +14,9 @@
     </tr>
   </table>
   <br>
-  <p>Thêm mục mới: <input [(ngModel)]="newFieldData"> <button (click)="createField()">Thêm</button></p>
+  <p>Thêm mục mới: <input [(ngModel)]="newFieldData">
+    <button (click)="createField()">Thêm</button>
+  </p>
 
   <h2>Thêm khách hàng mới</h2>
   <p *ngFor="let field of fields; let i = index">
@@ -32,15 +34,33 @@
   <table border="1">
     <tr>
       <th *ngFor="let field of fields">{{field}}</th>
-      <th style="padding-right: 5px"> </th>
+      <th style="padding-right: 5px"></th>
     </tr>
     <tr *ngFor="let customerId of customerData.getCustomerList()">
-      <td *ngFor="let field of fields">{{customerData.getField(customerId,field)}}</td>
-      <td style="padding-right: 5px">
-        <button>Sửa</button>
-        &nbsp;
-        <button (click)="deleteCustomer(customerId)">Xóa</button>
+      <td *ngFor="let field of fields; let i = index">
+        <span *ngIf="editCustomerMode && customerId == editCustomerId">
+          <input size="10" [(ngModel)]="editCustomerData[i]">
+        </span>
+        <span *ngIf="!(editCustomerMode && customerId == editCustomerId)">
+          {{customerData.getField(customerId,field)}}
+        </span>
       </td>
+
+      <td style="padding-right: 5px">
+        <span *ngIf="editCustomerMode">
+          <span *ngIf="customerId == editCustomerId">
+            <button (click)="editCustomerDone()">Xong</button>
+            &nbsp;
+            <button (click)="editCustomerCancel()">Hủy</button>
+          </span>
+        </span>
+        <span *ngIf="!editCustomerMode">
+          <button (click)="editCustomer(customerId)">Sửa</button>
+          &nbsp;
+          <button (click)="deleteCustomer(customerId)">Xóa</button>
+        </span>
+      </td>
+
     </tr>
   </table>
 

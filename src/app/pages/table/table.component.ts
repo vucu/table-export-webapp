@@ -14,8 +14,11 @@ export class TableComponent implements OnInit {
 
   newFieldData:string = "";
   newCustomerData:string[] = [];
+  editCustomerData:string[] = [];
+  editCustomerMode:boolean = false;
+  editCustomerId:number = -1;
 
-  loadSampleData() {
+  private loadSampleData() {
     this.fields.push("Họ");
     this.fields.push("Đệm");
     this.fields.push("Tên");
@@ -72,7 +75,32 @@ export class TableComponent implements OnInit {
     this.newCustomerData = [];
   }
 
-  deleteCustomer(customterId:number) {
-    this.customerData.deleteCustomer(customterId);
+  deleteCustomer(customerId:number) {
+    this.customerData.deleteCustomer(customerId);
+  }
+
+  editCustomer(customerId:number) {
+    this.editCustomerData = [];
+    for (let field of this.fields) {
+      this.editCustomerData.push(this.customerData.getField(customerId,field));
+    }
+    this.editCustomerMode = true;
+    this.editCustomerId = customerId;
+  }
+
+  editCustomerDone() {
+    for (var i=0;i<this.fields.length;i++) {
+      this.customerData.updateField(this.editCustomerId,this.fields[i],this.editCustomerData[i]);
+    }
+
+    this.editCustomerData = [];
+    this.editCustomerMode = false;
+    this.editCustomerId = -1;
+  }
+
+  editCustomerCancel() {
+    this.editCustomerData = [];
+    this.editCustomerMode = false;
+    this.editCustomerId = -1;
   }
 }
