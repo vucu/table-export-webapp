@@ -12,6 +12,9 @@ export class TableComponent implements OnInit {
   customerData:CustomerData;
   fields:string[] = [];
 
+  newFieldData:string;
+  newCustomerData:string[] = [];
+
   loadSampleData() {
     this.fields.push("Họ");
     this.fields.push("Đệm");
@@ -38,15 +41,15 @@ export class TableComponent implements OnInit {
     this.loadSampleData();
   }
 
-  exportToCsv(event) {
+  exportToCsv() {
 
   }
 
-  createField(event) {
+  createField() {
 
   }
 
-  createCustomer(event) {
+  createCustomer() {
 
   }
 }

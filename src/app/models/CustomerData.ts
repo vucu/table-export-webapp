@@ -37,10 +37,17 @@ export class CustomerData {
     return "";
   }
 
-  // Update a customer fields
   updateField(customerId:number,fieldName:string,fieldValue:string) {
     if (this.data.has(customerId)) {
       return this.data.get(customerId).set(fieldName,fieldValue);
     }
+  }
+
+  deleleField(fieldName:string) {
+    this.data.forEach(function (value, key) {
+      if (value.has(fieldName)) {
+        value.delete(fieldName);
+      }
+    })
   }
 }

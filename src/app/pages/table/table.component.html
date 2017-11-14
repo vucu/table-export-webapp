@@ -6,16 +6,16 @@
       <th>Mục</th>
       <th style="padding-right: 5px"> </th>
     </tr>
-    <tr *ngFor="let field of fields">
+    <tr *ngFor="let field of fields; let i = index">
       <td>{{field}}</td>
       <td style="padding-right: 5px">
         <button>Xóa</button>
       </td>
     </tr>
     <tr>
-      <td><input type="text" value=""></td>
+      <td><input ngModel="newFieldData"></td>
       <td style="padding-right: 5px">
-        <button (click)="createField($event)">Thêm</button>
+        <button (click)="createField()">Thêm</button>
       </td>
     </tr>
   </table>
@@ -34,7 +34,7 @@
   <p>{{customerData.getCustomerList()}}</p>
   <p>{{fields}}</p>
   <p>{{customerData.getField(0,fields[0])}}</p>
-  <button (click)="exportToCsv($event)">Export to CSV</button>
+  <button (click)="exportToCsv()">Export to CSV</button>
   <br><br>
   <table border="1">
     <tr>
