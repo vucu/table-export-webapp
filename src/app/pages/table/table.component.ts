@@ -1,6 +1,5 @@
 import { Component } from '@angular/core';
 import { OnInit } from '@angular/core';
-import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { Angular2Csv } from 'angular2-csv/Angular2-csv';
 import {CustomerData} from "../../models/CustomerData";
 
@@ -47,11 +46,16 @@ export class TableComponent implements OnInit {
   }
 
   createField() {
-
+    if (this.newFieldData) {
+      this.fields.push(this.newFieldData);
+    }
+    this.newFieldData = "";
   }
 
   deleteField(index:number) {
-
+    let field:string = this.fields[index];
+    this.customerData.deleleField(field);
+    this.fields.splice(index,1);
   }
 
   createCustomer() {

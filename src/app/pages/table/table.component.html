@@ -9,12 +9,12 @@
     <tr *ngFor="let field of fields; let i = index">
       <td>{{field}}</td>
       <td style="padding-right: 5px">
-        <button>Xóa</button>
+        <button (click)="deleteField(i)">Xóa</button>
       </td>
     </tr>
   </table>
   <br>
-  <p>Thêm mục mới: <input> <button (click)="createField()">Thêm</button></p>
+  <p>Thêm mục mới: <input [(ngModel)]="newFieldData"> <button (click)="createField()">Thêm</button></p>
 
   <h2>Thêm khách hàng mới</h2>
   <p *ngFor="let field of fields">
@@ -27,9 +27,6 @@
   </p>
 
   <h2>Danh sách khách hàng</h2>
-  <p>{{customerData.getCustomerList()}}</p>
-  <p>{{fields}}</p>
-  <p>{{customerData.getField(0,fields[0])}}</p>
   <button (click)="exportToCsv()">Export to CSV</button>
   <br><br>
   <table border="1">
