@@ -1,6 +1,6 @@
 export class CustomerData {
   // map: [customerId,fieldName],fieldValue
-  data:Map<[number,string],string> = new Map();
+  private data:Map<[number,string],string> = new Map();
   private idCount = 0;
 
   constructor() {
