@@ -1,13 +1,20 @@
 <div align="center">
   <h1>Quản lý danh mục khách hàng</h1>
+  <h2>Mục</h2>
+  <h2>Thêm khách hàng mới</h2>
+  <h2>Danh sách khách hàng</h2>
+  <p>{{customerData.getCustomerList()}}</p>
+  <p>{{fields}}</p>
+  <p>{{customerData.getField(0,fields[0])}}</p>
   <button (click)="exportToCsv($event)">Export to CSV</button>
   <br><br>
-  <table border="1">
+  <table border="1" style="padding: 10px;">
     <tr>
-      <th *ngFor="let header of tableHeader">{{header}}</th>
+      <th *ngFor="let field of fields">{{field}}</th>
     </tr>
-    <tr *ngFor="let numberArray of table">
-      <td *ngFor="let number of numberArray">{{number}}</td>
+    <tr *ngFor="let customerId of customerData.getCustomerList()">
+      <td *ngFor="let field of fields">{{customerData.getField(customerId,field)}}</td>
+      <td><button>Xóa</button></td>
     </tr>
   </table>
 </div>
