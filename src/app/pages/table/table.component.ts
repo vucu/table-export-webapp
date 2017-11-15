@@ -1,6 +1,10 @@
 import { Component } from '@angular/core';
 import { OnInit } from '@angular/core';
 import { Angular2Csv } from 'angular2-csv/Angular2-csv';
+
+import * as jsPDF from 'jspdf'
+import * as html2canvas from 'html2canvas';
+
 import {CustomerData} from "../../models/CustomerData";
 
 @Component({
@@ -42,10 +46,6 @@ export class TableComponent implements OnInit {
 
   ngOnInit() {
     this.loadSampleData();
-  }
-
-  exportToCsv() {
-
   }
 
   createField() {
@@ -103,5 +103,35 @@ export class TableComponent implements OnInit {
     this.editCustomerData = [];
     this.editCustomerMode = false;
     this.editCustomerId = -1;
+  }
+
+  private generateTable():string[][] {
+    var table:string[][] = [];
+
+    var tr:string[] = [];
+
+    for (let field of this.fields) {
+      tr.push(field);
+    }
+    table.push(tr);
+
+    for (let customerId of this.customerData.getCustomerList()) {
+      tr = [];
+      for (let field of this.fields) {
+        tr.push(this.customerData.getField(customerId,field));
+      }
+      table.push(tr);
+    }
+
+    return table;
+  }
+
+  exportToPdf() {
+    window.alert("backend!")
+  }
+
+  exportToCsv() {
+    var table:string[][] = this.generateTable();
+    new Angular2Csv(table,"Report-"+Date.now());
   }
 }

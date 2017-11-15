@@ -29,6 +29,12 @@
   </p>
 
   <h2>Danh sách khách hàng</h2>
+  <p>
+    Xuất ra: &nbsp;
+    <button (click)="exportToCsv()">Excel</button>
+    &nbsp;
+    <button (click)="exportToPdf()">PDF</button>
+  </p>
   <table border="1">
     <tr>
       <th *ngFor="let field of fields">{{field}}</th>
