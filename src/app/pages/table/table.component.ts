@@ -1,9 +1,6 @@
-import { Component } from '@angular/core';
+﻿import { Component } from '@angular/core';
 import { OnInit } from '@angular/core';
 import { Angular2Csv } from 'angular2-csv/Angular2-csv';
-
-import * as jsPDF from 'jspdf'
-import * as html2canvas from 'html2canvas';
 
 import {CustomerData} from "../../models/CustomerData";
 
