@@ -12,10 +12,6 @@ import {TableComponent} from "./pages/table/table.component";
 const appRoutes: Routes = [
   {
     path: '',
-    component: HomeComponent
-  },
-  {
-    path: 'table',
     component: TableComponent
   }
 ];
