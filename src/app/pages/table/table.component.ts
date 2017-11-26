@@ -155,7 +155,13 @@ export class TableComponent implements OnInit {
   }
 
   deleteCustomer(customerId:number) {
-    this.customerDataContainer.deleteCustomer(customerId);
+    this.http.delete(environment.apiEndPoint+"/customers/"+customerId).subscribe(
+      data=>{
+        this.loadCustomerDatas();
+      }, err=>{
+        this.loadCustomerDatas();
+      }
+    );
   }
 
   editCustomer(customerId:number) {
