@@ -73,17 +73,6 @@ export class TableComponent implements OnInit {
     });
   }
 
-  getField(customerId:number,fieldName:string):string {
-    if (this.customerDatas.has(customerId)) {
-      for (let customerData of this.customerDatas.get(customerId)) {
-        if (customerData.fieldName==fieldName) {
-          return customerData.fieldValue;
-        }
-      }
-    }
-
-    return "";
-  }
   private loadData() {
     this.customerDataContainer = new CustomerDataContainer();
 
@@ -96,6 +85,18 @@ export class TableComponent implements OnInit {
 
   ngOnInit() {
     this.loadData();
+  }
+
+  getField(customerId:number,fieldName:string):string {
+    if (this.customerDatas.has(customerId)) {
+      for (let customerData of this.customerDatas.get(customerId)) {
+        if (customerData.fieldName==fieldName) {
+          return customerData.fieldValue;
+        }
+      }
+    }
+
+    return "";
   }
 
   createField() {
@@ -150,7 +151,7 @@ export class TableComponent implements OnInit {
   }
 
   resetNewCustomerInput() {
-    this.newCustomerData = [];
+    this.newCustomerData = new Array<string>(this.fieldNames.length);
   }
 
   deleteCustomer(customerId:number) {
@@ -159,21 +160,34 @@ export class TableComponent implements OnInit {
 
   editCustomer(customerId:number) {
     this.editCustomerData = [];
-    for (let field of this.fields) {
-      this.editCustomerData.push(this.getField(customerId,field));
+    for (let fieldName of this.fieldNames) {
+      this.editCustomerData.push(this.getField(customerId,fieldName.name));
     }
     this.editCustomerMode = true;
     this.editCustomerId = customerId;
   }
 
   editCustomerDone() {
-    for (var i=0;i<this.fields.length;i++) {
-      this.customerDataContainer.updateField(this.editCustomerId,this.fields[i],this.editCustomerData[i]);
+    let headers = new HttpHeaders({ 'Content-Type': 'application/json' });
+    for (var i=0;i<this.fieldNames.length;i++) {
+      // Update this field
+      let id: number = this.editCustomerId;
+      let fieldName: string = this.fieldNames[i].name;
+      let fieldValue: string = this.editCustomerData[i];
+      this.http.post(environment.apiEndPoint+"/customers",{
+        "customerId":id,
+        "fieldName":fieldName,
+        "fieldValue":fieldValue
+      }, {headers:headers}).subscribe(data=>{
+        this.loadCustomerDatas();
+        this.editCustomerData[i] = "";
+      }, data=>{
+        this.loadCustomerDatas();
+        this.editCustomerData[i] = "";
+      })
     }
 
-    this.editCustomerData = [];
     this.editCustomerMode = false;
-    this.editCustomerId = -1;
   }
 
   editCustomerCancel() {
@@ -187,15 +201,15 @@ export class TableComponent implements OnInit {
 
     var tr:string[] = [];
 
-    for (let field of this.fields) {
-      tr.push(field);
+    for (let fieldName of this.fieldNames) {
+      tr.push(fieldName.name);
     }
     table.push(tr);
 
     for (let customerId of this.customerDataContainer.getCustomerList()) {
       tr = [];
-      for (let field of this.fields) {
-        tr.push(this.getField(customerId,field));
+      for (let fieldName of this.fieldNames) {
+        tr.push(this.getField(customerId,fieldName.name));
       }
       table.push(tr);
     }
