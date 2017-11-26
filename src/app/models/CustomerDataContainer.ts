@@ -1,4 +1,4 @@
-export class CustomerData {
+export class CustomerDataContainer {
   // map: customerId,<fieldName,fieldValue>
   private data:Map<number,Map<string,string>> = new Map();
   private idCount = 0;
@@ -27,15 +27,7 @@ export class CustomerData {
     return Array.from(this.data.keys());
   }
 
-  getField(customerId:number,fieldName:string):string {
-    if (this.data.has(customerId)) {
-      if (this.data.get(customerId).has(fieldName)) {
-        return this.data.get(customerId).get(fieldName);
-      }
-    }
 
-    return "";
-  }
 
   updateField(customerId:number,fieldName:string,fieldValue:string) {
     if (this.data.has(customerId)) {

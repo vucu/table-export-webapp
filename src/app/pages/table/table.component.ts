@@ -2,7 +2,19 @@
 import { OnInit } from '@angular/core';
 import { Angular2Csv } from 'angular2-csv/Angular2-csv';
 
-import {CustomerData} from "../../models/CustomerData";
+import {CustomerDataContainer} from "../../models/CustomerDataContainer";
+import {HttpClient,HttpHeaders} from "@angular/common/http";
+import {environment} from "../../../environments/environment";
+
+class CustomerData {
+  customerId: number;
+  fieldName: string;
+  fieldValue: string;
+}
+
+class FieldName {
+  name: string;
+}
 
 @Component({
   selector: 'table-component',
@@ -10,8 +22,9 @@ import {CustomerData} from "../../models/CustomerData";
   styleUrls: ['./table.component.css']
 })
 export class TableComponent implements OnInit {
-  customerData:CustomerData;
+  customerDataContainer:CustomerDataContainer;
   fields:string[] = [];
+  statusString: string = "";
 
   newFieldData:string = "";
   newCustomerData:string[] = [];
@@ -19,54 +32,121 @@ export class TableComponent implements OnInit {
   editCustomerMode:boolean = false;
   editCustomerId:number = -1;
 
-  private loadSampleData() {
-    this.fields.push("Họ");
-    this.fields.push("Đệm");
-    this.fields.push("Tên");
+  fieldNames:FieldName[];
+  customerIds:number[] = [];
+  customerDatas:Map<number,CustomerData[]> = new Map();
 
-    this.customerData = new CustomerData();
+  constructor(private http: HttpClient) {};
 
-    var id;
-    id = this.customerData.createCustomer();
-    this.customerData.updateField(id,"Họ","Nguyễn");
-    this.customerData.updateField(id,"Đệm","Văn");
-    this.customerData.updateField(id,"Tên","Long");
-    id = this.customerData.createCustomer();
-    this.customerData.updateField(id,"Họ","Nguyễn");
-    this.customerData.updateField(id,"Đệm","Thị Minh");
-    this.customerData.updateField(id,"Tên","Khai");
-    id = this.customerData.createCustomer();
-    this.customerData.updateField(id,"Họ","Ngô");
-    this.customerData.updateField(id,"Đệm","Văn");
-    this.customerData.updateField(id,"Tên","Tự");
+  private loadFieldNames(notify:boolean=false) {
+    if (notify) {
+      this.statusString = "Loading field names...";
+    }
+    this.http.get<FieldName[]>(environment.apiEndPoint+"/field-names").subscribe(data=>{
+      this.fieldNames = data;
+      this.newCustomerData.length = this.fieldNames.length;
+      if (notify) {
+        this.statusString = "Done connecting";
+      }
+    });
+  }
+
+  private loadCustomerDatas(notify:boolean=false) {
+    if (notify) {
+      this.statusString = "Loading customers";
+    }
+    this.http.get<number[]>(environment.apiEndPoint+"/customers").subscribe(data => {
+      this.customerIds = data;
+
+      for (let customerId of this.customerIds) {
+        // Get data of this specific customer
+        this.customerDatas.set(customerId,new Array<CustomerData>());
+
+        this.http.get<CustomerData[]>(environment.apiEndPoint+"/customers/"+customerId).subscribe(data=>{
+            this.customerDatas.set(customerId,data);
+            if (notify) {
+              this.statusString = "Done connecting";
+            }
+          }
+        )
+      }
+    });
+  }
+
+  getField(customerId:number,fieldName:string):string {
+    if (this.customerDatas.has(customerId)) {
+      for (let customerData of this.customerDatas.get(customerId)) {
+        if (customerData.fieldName==fieldName) {
+          return customerData.fieldValue;
+        }
+      }
+    }
+
+    return "";
+  }
+  private loadData() {
+    this.customerDataContainer = new CustomerDataContainer();
+
+    // Get field names
+    this.loadFieldNames(true);
+
+    // Get customer's ids
+    this.loadCustomerDatas(true);
   }
 
   ngOnInit() {
-    this.loadSampleData();
+    this.loadData();
   }
 
   createField() {
     if (this.newFieldData) {
-      this.fields.push(this.newFieldData);
+      let headers = new HttpHeaders({ 'Content-Type': 'application/json' });
+
+      this.http.post(environment.apiEndPoint+"/field-names",{
+        "name":this.newFieldData
+      }, { headers: headers }).subscribe(data=>{
+        this.loadFieldNames();
+      }, err => {
+        this.loadFieldNames();
+      });
+
     }
     this.newFieldData = "";
   }
 
   deleteField(index:number) {
-    let field:string = this.fields[index];
-    this.customerData.deleleField(field);
-    this.fields.splice(index,1);
+/*    let field:string = this.fields[index];
+    this.customerDataContainer.deleleField(field);
+    this.fields.splice(index,1);*/
   }
 
   createNewCustomer() {
     var id;
-    id = this.customerData.createCustomer();
-    for (var i=0;i<this.fields.length;i++) {
-      let fieldName:string = this.fields[i];
-      let fieldValue:string = this.newCustomerData[i];
-      this.customerData.updateField(id,fieldName,fieldValue);
-    }
-    this.newCustomerData = [];
+
+    // Create a new customers on the backend. Return its id
+    this.http.get<number>(environment.apiEndPoint+"/new-customer").subscribe(
+      data=>{
+        id = data;
+
+        // Then add the new customer data
+        let headers = new HttpHeaders({ 'Content-Type': 'application/json' });
+        for (var i=0;i<this.fieldNames.length;i++) {
+          let fieldName: string = this.fieldNames[i].name;
+          let fieldValue: string = this.newCustomerData[i];
+          this.http.post(environment.apiEndPoint+"/customers",{
+            "customerId":id,
+            "fieldName":fieldName,
+            "fieldValue":fieldValue
+          }, {headers:headers}).subscribe(data=>{
+            this.loadCustomerDatas();
+            this.newCustomerData[i] = "";
+          }, data=>{
+            this.loadCustomerDatas();
+            this.newCustomerData[i] = "";
+          })
+        }
+      }
+    )
   }
 
   resetNewCustomerInput() {
@@ -74,13 +154,13 @@ export class TableComponent implements OnInit {
   }
 
   deleteCustomer(customerId:number) {
-    this.customerData.deleteCustomer(customerId);
+    this.customerDataContainer.deleteCustomer(customerId);
   }
 
   editCustomer(customerId:number) {
     this.editCustomerData = [];
     for (let field of this.fields) {
-      this.editCustomerData.push(this.customerData.getField(customerId,field));
+      this.editCustomerData.push(this.getField(customerId,field));
     }
     this.editCustomerMode = true;
     this.editCustomerId = customerId;
@@ -88,7 +168,7 @@ export class TableComponent implements OnInit {
 
   editCustomerDone() {
     for (var i=0;i<this.fields.length;i++) {
-      this.customerData.updateField(this.editCustomerId,this.fields[i],this.editCustomerData[i]);
+      this.customerDataContainer.updateField(this.editCustomerId,this.fields[i],this.editCustomerData[i]);
     }
 
     this.editCustomerData = [];
@@ -112,10 +192,10 @@ export class TableComponent implements OnInit {
     }
     table.push(tr);
 
-    for (let customerId of this.customerData.getCustomerList()) {
+    for (let customerId of this.customerDataContainer.getCustomerList()) {
       tr = [];
       for (let field of this.fields) {
-        tr.push(this.customerData.getField(customerId,field));
+        tr.push(this.getField(customerId,field));
       }
       table.push(tr);
     }
