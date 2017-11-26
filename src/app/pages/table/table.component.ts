@@ -5,6 +5,7 @@ import { Angular2Csv } from 'angular2-csv/Angular2-csv';
 import {CustomerDataContainer} from "../../models/CustomerDataContainer";
 import {HttpClient,HttpHeaders} from "@angular/common/http";
 import {environment} from "../../../environments/environment";
+import {RequestOptions} from "@angular/http";
 
 class CustomerData {
   customerId: number;
@@ -228,8 +229,10 @@ export class TableComponent implements OnInit {
   }
 
   exportToPdf() {
-    window.alert("backend!")
+    window.open(environment.apiEndPoint+"/pdf-report");
   }
+
+
 
   exportToCsv() {
     var table:string[][] = this.generateTable();
