@@ -13,6 +13,7 @@ class CustomerData {
 }
 
 class FieldName {
+  id: number;
   name: string;
 }
 
@@ -22,8 +23,6 @@ class FieldName {
   styleUrls: ['./table.component.css']
 })
 export class TableComponent implements OnInit {
-  customerDataContainer:CustomerDataContainer;
-  fields:string[] = [];
   statusString: string = "";
 
   newFieldData:string = "";
@@ -74,8 +73,6 @@ export class TableComponent implements OnInit {
   }
 
   private loadData() {
-    this.customerDataContainer = new CustomerDataContainer();
-
     // Get field names
     this.loadFieldNames(true);
 
@@ -104,7 +101,8 @@ export class TableComponent implements OnInit {
       let headers = new HttpHeaders({ 'Content-Type': 'application/json' });
 
       this.http.post(environment.apiEndPoint+"/field-names",{
-        "name":this.newFieldData
+        "name":this.newFieldData,
+        "id":0
       }, { headers: headers }).subscribe(data=>{
         this.loadFieldNames();
       }, err => {
@@ -115,10 +113,16 @@ export class TableComponent implements OnInit {
     this.newFieldData = "";
   }
 
-  deleteField(index:number) {
-/*    let field:string = this.fields[index];
-    this.customerDataContainer.deleleField(field);
-    this.fields.splice(index,1);*/
+  deleteField(fieldNameId:number) {
+    this.http.delete(environment.apiEndPoint+"/field-names/"+fieldNameId).subscribe(
+      data=>{
+        this.loadFieldNames();
+        this.loadCustomerDatas();
+      }, err=>{
+        this.loadFieldNames();
+        this.loadCustomerDatas();
+      }
+    );
   }
 
   createNewCustomer() {
@@ -212,7 +216,7 @@ export class TableComponent implements OnInit {
     }
     table.push(tr);
 
-    for (let customerId of this.customerDataContainer.getCustomerList()) {
+    for (let customerId of this.customerIds) {
       tr = [];
       for (let fieldName of this.fieldNames) {
         tr.push(this.getField(customerId,fieldName.name));

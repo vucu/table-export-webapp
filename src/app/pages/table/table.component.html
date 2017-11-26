@@ -10,7 +10,7 @@
     <tr *ngFor="let fieldName of fieldNames; let i = index">
       <td>{{fieldName.name}}</td>
       <td style="padding-right: 5px">
-        <button (click)="deleteField(i)">Xóa</button>
+        <button (click)="deleteField(fieldName.id)">Xóa</button>
       </td>
     </tr>
   </table>
